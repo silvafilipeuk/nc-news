@@ -48,6 +48,40 @@ describe("/api/topics", () => {
 	});
 });
 
+describe("/api/articles", () => {
+	test("GET STATUS 200: should return an array of articles objects with their respective properties.", () => {
+		return request(app)
+			.get("/api/articles")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(13);
+				expect(articles.body.articles[0]).toMatchObject({
+					article_id: 3,
+					author: "icellusedkars",
+					title: "Eight pug gifs that remind me of mitch",
+					topic: "mitch",
+					created_at: convertTimestampToDate(1604394720000),
+					votes: 0,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					comment_count: 2,
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 400: should return appropriate message for the client when requested an invalid endpoint", () => {
+		return request(app)
+			.get("/api/art1cles")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid endpoint.");
+			});
+	});
+});
+
 describe("/api/articles/:article_id", () => {
 	test("GET STATUS 200: should return an article object for a given id.", () => {
 		return request(app)
@@ -66,6 +100,7 @@ describe("/api/articles/:article_id", () => {
 				});
 			});
 	});
+
 	test("GET STATUS 404: should return an appropriate response if given an ID that is not in the database.", () => {
 		return request(app)
 			.get("/api/articles/9999")
@@ -75,24 +110,25 @@ describe("/api/articles/:article_id", () => {
 				expect(response.body.msg).toBe("Article not found!");
 			});
 	});
-	test(`GET STATUS 404: should return an appropriate response if given an ID that is not in the database.
-		This test is forcing a PSQL ERROR to treated. (id out of the psql integer range)`, () => {
+
+	test(`GET STATUS 400: should return an appropriate response if given an ID that is not in the database.
+		This test is forcing a PSQL ERROR to be treated. (id out of the psql integer range)`, () => {
 		return request(app)
 			.get("/api/articles/999999999999999999")
-			.expect(404)
+			.expect(400)
 			.then((response) => {
-				expect(response.body.status).toBe(404);
-				expect(response.body.msg).toBe("Article not found!");
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid ID.");
 			});
 	});
-	test(`GET STATUS 404: should return an appropriate response if given an ID that is not in the database.
-		This test is forcing a PSQL ERROR to treated. (invalid input syntax for type integer: "string")`, () => {
+	test(`GET STATUS 400: should return an appropriate response if given an ID that is not in the database.
+		This test is forcing a PSQL ERROR to be treated. (invalid input syntax for type integer: "string")`, () => {
 		return request(app)
 			.get("/api/articles/ddd")
-			.expect(404)
+			.expect(400)
 			.then((response) => {
-				expect(response.body.status).toBe(404);
-				expect(response.body.msg).toBe("Article not found!");
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid ID.");
 			});
 	});
 	test(`GET STATUS 400: should return an appropriate response if misstyped endpoint)`, () => {

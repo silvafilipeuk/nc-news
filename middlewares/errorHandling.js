@@ -9,12 +9,12 @@ const handleCustomErrors = (err, req, res, next) => {
 const handlePsqlErrors = (err, req, res, next) => {
 	// CODE 22003 - Value is out of range for type integer
 	if (err.code === "22003") {
-		res.status(404).json({ status: 404, msg: "Article not found!" });
+		res.status(400).json({ status: 400, msg: "Invalid ID." });
 	}
 
 	// CODE 22P02 - Invalid input syntax for type integer
 	if (err.code === "22P02") {
-		res.status(404).json({ status: 404, msg: "Article not found!" });
+		res.status(400).json({ status: 400, msg: "Invalid ID." });
 	}
 
 	next(err);

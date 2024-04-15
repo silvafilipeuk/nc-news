@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
-const { getArticlesById } = require("./controllers/articles.controllers");
+const {
+	getArticles,
+	getArticlesById,
+} = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getApiInfo } = require("./controllers/api.controllers");
 const {
@@ -13,6 +16,7 @@ const {
 
 app.get("/api", getApiInfo);
 app.get("/api/topics", getTopics);
+app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticlesById);
 
 // Error Handling:
