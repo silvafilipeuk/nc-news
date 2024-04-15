@@ -7,6 +7,18 @@ const data = require("../db/data/test-data");
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
+describe("/api", () => {
+	test("GET STATUS 200: should return an object describing all the available endpoinst on the API.", () => {
+		const endpoints = require("../endpoints.json");
+		return request(app)
+			.get("/api")
+			.expect(200)
+			.then((apiEndpoints) => {
+				expect(apiEndpoints.body.endpoints).toEqual(endpoints);
+			});
+	});
+});
+
 describe("/api/topics", () => {
 	test("GET STATUS 200: should return an array of all topic objects with slug and description properties.", () => {
 		return request(app)
