@@ -18,3 +18,13 @@ You need to create two different .env files to setup the databases as follows:
 -   **To install the databases:** npm run setup-dbs on your terminal.
 
 -   **To seed the databases:** npm run seed
+
+# API endpoints:
+
+**/api** - returns an object describing all the available endpoints on your API.
+
+**/api/topics** - returns an array of topic objects: Example:
+
+    "exampleResponse": {
+      "topics": [{ "slug": "football", "description": "Footie!" }]
+    }
