@@ -14,3 +14,7 @@ You need to create two different .env files to setup the databases as follows:
 -   **.env.test** - Uses the test database, set the variable PGDATABASE to the correct database (PGDATABASE=database_name_here)
 
 -   Please refer to db/setup.sql file for the correct database names, and also to create the databases locally;
+
+-   **To install the databases:** npm run setup-dbs on your terminal.
+
+-   **To seed the databases:** npm run seed
