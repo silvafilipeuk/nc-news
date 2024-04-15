@@ -3,6 +3,7 @@ const request = require("supertest");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data");
+const { convertTimestampToDate } = require("../db/seeds/utils");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -30,13 +31,76 @@ describe("/api/topics", () => {
 					expect(typeof topic.description).toBe("string");
 					expect(typeof topic.slug).toBe("string");
 				});
+				expect(topics.body.topics[0]).toMatchObject({
+					description: "The man, the Mitch, the legend",
+					slug: "mitch",
+				});
 			});
 	});
-	test("GET STATUS 404: should return appropriate message for the client when requested an invalid endpoint", () => {
+	test("GET STATUS 400: should return appropriate message for the client when requested an invalid endpoint", () => {
 		return request(app)
 			.get("/api/t0pics")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid endpoint.");
+			});
+	});
+});
+
+describe("/api/articles/:article_id", () => {
+	test("GET STATUS 200: should return an article object for a given id.", () => {
+		return request(app)
+			.get("/api/articles/1")
+			.expect(200)
+			.then((article) => {
+				expect(article.body.article).toMatchObject({
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: convertTimestampToDate(1594329060000),
+					votes: 100,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	test("GET STATUS 404: should return an appropriate response if given an ID that is not in the database.", () => {
+		return request(app)
+			.get("/api/articles/9999")
 			.expect(404)
 			.then((response) => {
+				expect(response.body.status).toBe(404);
+				expect(response.body.msg).toBe("Article not found!");
+			});
+	});
+	test(`GET STATUS 404: should return an appropriate response if given an ID that is not in the database.
+		This test is forcing a PSQL ERROR to treated. (id out of the psql integer range)`, () => {
+		return request(app)
+			.get("/api/articles/999999999999999999")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.status).toBe(404);
+				expect(response.body.msg).toBe("Article not found!");
+			});
+	});
+	test(`GET STATUS 404: should return an appropriate response if given an ID that is not in the database.
+		This test is forcing a PSQL ERROR to treated. (invalid input syntax for type integer: "string")`, () => {
+		return request(app)
+			.get("/api/articles/ddd")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.status).toBe(404);
+				expect(response.body.msg).toBe("Article not found!");
+			});
+	});
+	test(`GET STATUS 400: should return an appropriate response if misstyped endpoint)`, () => {
+		return request(app)
+			.get("/api/article/1")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
 				expect(response.body.msg).toBe("Invalid endpoint.");
 			});
 	});
