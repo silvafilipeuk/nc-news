@@ -30,6 +30,24 @@ You need to create two different .env files to setup the databases as follows:
     "topics": [{ "slug": "football", "description": "Footie!" }]
   } 
 ```
+**/api/articles** - return an array of articles objects.
+
+```
+"exampleResponse": {
+    "articles": [
+      {
+        "article_id": 3,
+        "title": "Eight pug gifs that remind me of mitch",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "created_at": "2020-11-03T09:12:00.000Z",
+        "votes": 0,
+        "comment_count": 2
+      }
+    ]
+  }
+```
 
 **/api/articles/:article_id** - return an array with the object corresponding to the given id
 ```
