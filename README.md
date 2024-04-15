@@ -1,3 +1,16 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+## Setup instructions:
+
+**The project uses two different databases for different purposes:**
+
+-   Test database: used during the testing phase.
+-   Dev database: used during development phase.
+
+You need to create two different .env files to setup the databases as follows:
+
+-   **.env.development** - Uses the development database, set the variable PGDATABASE to the correct database (PGDATABASE=database_name_here)
+
+-   **.env.test** - Uses the test database, set the variable PGDATABASE to the correct database (PGDATABASE=database_name_here)
+
+-   Please refer to db/setup.sql file for the correct database names, and also to create the databases locally;
