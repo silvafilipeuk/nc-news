@@ -211,3 +211,65 @@ describe("/api/articles/:article_id/comments", () => {
 			});
 	});
 });
+
+describe("POST - /api/articles/:article_id/comments", () => {
+	test("POST STATUS 201: Should post a comment in the database and return the posted comment.", () => {
+		const newPost = {
+			username: "icellusedkars",
+			body: "This is the icellusedkars new comment!",
+		};
+
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(newPost)
+			.expect(201)
+			.then((comment) => {
+				expect(comment.body.comment.length).toBe(1);
+				expect(comment.body.comment[0]).toMatchObject({
+					comment_id: 19,
+					body: "This is the icellusedkars new comment!",
+					article_id: 2,
+					author: "icellusedkars",
+					votes: 0,
+					created_at: expect.any(String),
+				});
+			});
+	});
+	test("POST STATUS 400: Should return an appropriate message when passed an incomplete body (No username)", () => {
+		const newPost = {
+			body: "This is the icellusedkars new comment!",
+		};
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(newPost)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("POST STATUS 400: Should return an appropriate message when passed an incomplete body (No body)", () => {
+		const newPost = {
+			username: "icellusedkars",
+		};
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(newPost)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("POST STATUS 404: Should return an appropriate message when passed an inexistent username", () => {
+		const newPost = {
+			username: "Filipe",
+			body: "This is the Filipe's new comment!",
+		};
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(newPost)
+			.expect(403)
+			.then((response) => {
+				expect(response.body.msg).toBe("Username not found.");
+			});
+	});
+});

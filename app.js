@@ -16,6 +16,8 @@ const {
 	handleServerErrors,
 } = require("./middlewares/errorHandling");
 
+app.use(express.json());
+
 // Endpoints:
 
 app.get("/api", getApiInfo);
@@ -23,7 +25,7 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticlesById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-//app.post("/api/articles/:article_id/comments", postComment);
+app.post("/api/articles/:article_id/comments", postComment);
 
 // Error Handling:
 

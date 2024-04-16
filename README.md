@@ -21,16 +21,16 @@ You need to create two different .env files to setup the databases as follows:
 
 # API endpoints:
 
-**/api** - returns an object describing all the available endpoints on your API.
+**GET /api** - returns an object describing all the available endpoints on your API.
 
-**/api/topics** - returns an array of topic objects: Example:
+**GET /api/topics** - returns an array of topic objects: Example:
 
 ```
   "exampleResponse": {
     "topics": [{ "slug": "football", "description": "Footie!" }]
   } 
 ```
-**/api/articles** - return an array of articles objects.
+**GET /api/articles** - return an array of articles objects.
 
 ```
 "exampleResponse": {
@@ -49,7 +49,7 @@ You need to create two different .env files to setup the databases as follows:
   }
 ```
 
-**/api/articles/:article_id** - return an array with the object corresponding to the given id
+**GET /api/articles/:article_id** - return an array with the object corresponding to the given id
 ```
   "exampleResponse": {
     "article": [
@@ -66,7 +66,7 @@ You need to create two different .env files to setup the databases as follows:
     ]
   }
 ```
-**/api/articles/:article_id/comments** - return an array of comments for a given article
+**GET /api/articles/:article_id/comments** - return an array of comments for a given article
 
 ```
 
@@ -82,4 +82,21 @@ You need to create two different .env files to setup the databases as follows:
 				}
 			]
   	}
+```
+
+**POST /api/articles/:article_id/comments** - Adds a comment to the given article, returns the added comment.
+
+```
+"exampleResponse": {
+			"comment": [
+				{
+					"comment_id": "19",
+					"votes": "0",
+					"created_at": "2024-04-16T14:59:56.973Z",
+					"author": "icellusedkars",
+					"body": "This is the icellusedkars new comment!",
+					"article_id": "2"
+				}
+			]
+		}
 ```
