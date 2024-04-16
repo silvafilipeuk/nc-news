@@ -40,9 +40,9 @@ describe("/api/topics", () => {
 	test("GET STATUS 400: should return appropriate message for the client when requested an invalid endpoint", () => {
 		return request(app)
 			.get("/api/t0pics")
-			.expect(400)
+			.expect(404)
 			.then((response) => {
-				expect(response.body.status).toBe(400);
+				expect(response.body.status).toBe(404);
 				expect(response.body.msg).toBe("Invalid endpoint.");
 			});
 	});
@@ -74,9 +74,9 @@ describe("/api/articles", () => {
 	test("GET STATUS 400: should return appropriate message for the client when requested an invalid endpoint", () => {
 		return request(app)
 			.get("/api/art1cles")
-			.expect(400)
+			.expect(404)
 			.then((response) => {
-				expect(response.body.status).toBe(400);
+				expect(response.body.status).toBe(404);
 				expect(response.body.msg).toBe("Invalid endpoint.");
 			});
 	});
@@ -134,9 +134,9 @@ describe("/api/articles/:article_id", () => {
 	test(`GET STATUS 400: should return an appropriate response if misstyped endpoint)`, () => {
 		return request(app)
 			.get("/api/article/1")
-			.expect(400)
+			.expect(404)
 			.then((response) => {
-				expect(response.body.status).toBe(400);
+				expect(response.body.status).toBe(404);
 				expect(response.body.msg).toBe("Invalid endpoint.");
 			});
 	});
@@ -201,12 +201,12 @@ describe("/api/articles/:article_id/comments", () => {
 				expect(response.body.msg).toBe("Invalid ID.");
 			});
 	});
-	test(`GET STATUS 400: should return an appropriate response if misstyped endpoint)`, () => {
+	test(`GET STATUS 404: should return an appropriate response if misstyped endpoint)`, () => {
 		return request(app)
 			.get("/api/articles/1/comm3nts")
-			.expect(400)
+			.expect(404)
 			.then((response) => {
-				expect(response.body.status).toBe(400);
+				expect(response.body.status).toBe(404);
 				expect(response.body.msg).toBe("Invalid endpoint.");
 			});
 	});
