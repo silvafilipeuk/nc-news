@@ -64,6 +64,10 @@
 	"POST /api/articles/:article_id/comments": {
 		"description": "adds a comment to the given article, returns the added comment.",
 		"queries": [],
+		"body": {
+			"username": "icellusedkars",
+			"body": "This is the icellusedkars new comment!"
+		},
 		"exampleResponse": {
 			"comment": [
 				{
@@ -73,6 +77,25 @@
 					"author": "icellusedkars",
 					"body": "This is the icellusedkars new comment!",
 					"article_id": "2"
+				}
+			]
+		}
+	},
+	"PATCH /api/articles/:article_id": {
+		"description": "Update the given article number of votes passed on the body.",
+		"queries": [],
+		"body": { "inc_votes": 1 },
+		"exampleResponse": {
+			"article": [
+				{
+					"article_id": "1",
+					"title": "Living in the shadow of a great man",
+					"topic": "mitch",
+					"author": "butter_bridge",
+					"body": "I find this existence challenging",
+					"created_at": "2020-07-09T21:11:00.000Z",
+					"votes": "101",
+					"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
 				}
 			]
 		}
