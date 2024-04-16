@@ -235,6 +235,29 @@ describe("POST - /api/articles/:article_id/comments", () => {
 				});
 			});
 	});
+	test("POST STATUS 201: Should ignore not needed keys on the body object, post a comment in the database and return the posted comment.", () => {
+		const newPost = {
+			username: "icellusedkars",
+			body: "This is the icellusedkars new comment!",
+			votes: 100,
+		};
+
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(newPost)
+			.expect(201)
+			.then((comment) => {
+				expect(comment.body.comment.length).toBe(1);
+				expect(comment.body.comment[0]).toMatchObject({
+					comment_id: 19,
+					body: "This is the icellusedkars new comment!",
+					article_id: 2,
+					author: "icellusedkars",
+					votes: 0,
+					created_at: expect.any(String),
+				});
+			});
+	});
 	test("POST STATUS 400: Should return an appropriate message when passed an incomplete body (No username)", () => {
 		const newPost = {
 			body: "This is the icellusedkars new comment!",
@@ -259,6 +282,32 @@ describe("POST - /api/articles/:article_id/comments", () => {
 				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
+	test("POST STATUS 400: Should return an appropriate message when passed an invalid article ID", () => {
+		const newPost = {
+			username: "icellusedkars",
+			body: "This is the icellusedkars new comment!",
+		};
+		return request(app)
+			.post("/api/articles/ddd/comments")
+			.send(newPost)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("POST STATUS 404: Should return an appropriate message when passed an inexistent article ID", () => {
+		const newPost = {
+			username: "icellusedkars",
+			body: "This is the icellusedkars new comment!",
+		};
+		return request(app)
+			.post("/api/articles/999/comments")
+			.send(newPost)
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Article not found!");
+			});
+	});
 	test("POST STATUS 404: Should return an appropriate message when passed an inexistent username", () => {
 		const newPost = {
 			username: "Filipe",
@@ -267,7 +316,7 @@ describe("POST - /api/articles/:article_id/comments", () => {
 		return request(app)
 			.post("/api/articles/2/comments")
 			.send(newPost)
-			.expect(403)
+			.expect(404)
 			.then((response) => {
 				expect(response.body.msg).toBe("Username not found.");
 			});

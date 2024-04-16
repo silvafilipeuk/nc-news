@@ -24,7 +24,7 @@ const handlePsqlErrors = (err, req, res, next) => {
 
 	// CODE 23503 = SQL Violation of foreign key constraint
 	if (err.code === "23503") {
-		res.status(403).json({ status: 403, msg: "Username not found." });
+		res.status(404).json({ status: 404, msg: "Username not found." });
 	}
 
 	next(err);
