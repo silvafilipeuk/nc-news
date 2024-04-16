@@ -141,3 +141,73 @@ describe("/api/articles/:article_id", () => {
 			});
 	});
 });
+
+describe("/api/articles/:article_id/comments", () => {
+	test("GET STATUS 200: should return an array of comments for the given article_id.", () => {
+		return request(app)
+			.get("/api/articles/1/comments")
+			.expect(200)
+			.then((comments) => {
+				expect(comments.body.comments.length).toBe(11);
+				comments.body.comments.forEach((comment) => {
+					expect(comment).toMatchObject({
+						comment_id: expect.any(Number),
+						body: expect.any(String),
+						votes: expect.any(Number),
+						author: expect.any(String),
+						article_id: expect.any(Number),
+						created_at: expect.any(String),
+					});
+				});
+				expect(comments.body.comments).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: shoud return an empty array for an article that have no comments.", () => {
+		return request(app)
+			.get("/api/articles/2/comments")
+			.expect(200)
+			.then((comments) => {
+				expect(comments.body.comments.length).toBe(0);
+			});
+	});
+	test("GET STATUS 404: should return an appropriate message if the article does not exist.", () => {
+		return request(app)
+			.get("/api/articles/9999/comments")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.status).toBe(404);
+				expect(response.body.msg).toBe("Article not found!");
+			});
+	});
+	test(`GET STATUS 400: should return an appropriate response if given an ID that is not in the database.
+		This test is forcing a PSQL ERROR to be treated. (id out of the psql integer range)`, () => {
+		return request(app)
+			.get("/api/articles/999999999999999999/comments")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid ID.");
+			});
+	});
+	test(`GET STATUS 400: should return an appropriate response if given an ID that is not in the database.
+		This test is forcing a PSQL ERROR to be treated. (invalid input syntax for type integer: "string")`, () => {
+		return request(app)
+			.get("/api/articles/ddd/comments")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid ID.");
+			});
+	});
+	test(`GET STATUS 400: should return an appropriate response if misstyped endpoint)`, () => {
+		return request(app)
+			.get("/api/articles/1/comm3nts")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Invalid endpoint.");
+			});
+	});
+});

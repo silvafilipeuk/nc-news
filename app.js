@@ -4,6 +4,9 @@ const {
 	getArticles,
 	getArticlesById,
 } = require("./controllers/articles.controllers");
+const {
+	getCommentsByArticleId,
+} = require("./controllers/comments.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getApiInfo } = require("./controllers/api.controllers");
 const {
@@ -18,6 +21,7 @@ app.get("/api", getApiInfo);
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticlesById);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 // Error Handling:
 
