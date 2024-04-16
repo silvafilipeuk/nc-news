@@ -118,7 +118,7 @@ describe("/api/articles/:article_id", () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.status).toBe(400);
-				expect(response.body.msg).toBe("Invalid ID.");
+				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
 	test(`GET STATUS 400: should return an appropriate response if given an ID that is not in the database.
@@ -128,7 +128,7 @@ describe("/api/articles/:article_id", () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.status).toBe(400);
-				expect(response.body.msg).toBe("Invalid ID.");
+				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
 	test(`GET STATUS 400: should return an appropriate response if misstyped endpoint)`, () => {
@@ -188,7 +188,7 @@ describe("/api/articles/:article_id/comments", () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.status).toBe(400);
-				expect(response.body.msg).toBe("Invalid ID.");
+				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
 	test(`GET STATUS 400: should return an appropriate response if given an ID that is not in the database.
@@ -198,7 +198,7 @@ describe("/api/articles/:article_id/comments", () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.status).toBe(400);
-				expect(response.body.msg).toBe("Invalid ID.");
+				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
 	test(`GET STATUS 404: should return an appropriate response if misstyped endpoint)`, () => {
@@ -270,6 +270,167 @@ describe("POST - /api/articles/:article_id/comments", () => {
 			.expect(403)
 			.then((response) => {
 				expect(response.body.msg).toBe("Username not found.");
+			});
+	});
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+	test("STATUS 200: Should update the article with the new quantity of votes passed in the body object", () => {
+		const newVote = { inc_votes: 1 };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(200)
+			.then((updatedArticle) => {
+				expect(updatedArticle.body.article.length).toBe(1);
+				expect(updatedArticle.body.article[0]).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 101,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	test("STATUS 200: Should update the article with the new quantity of votes passed in the body object (Testing for negative update)", () => {
+		const newVote = { inc_votes: -50 };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(200)
+			.then((updatedArticle) => {
+				expect(updatedArticle.body.article.length).toBe(1);
+				expect(updatedArticle.body.article[0]).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 50,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	test("STATUS 200: Should update the article votes to ZERO when trying to decrease more than the current number of votes", () => {
+		const newVote = { inc_votes: -110 };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(200)
+			.then((updatedArticle) => {
+				expect(updatedArticle.body.article.length).toBe(1);
+				expect(updatedArticle.body.article[0]).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 0,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	test("STATUS 200: Should ignore unecessary keys on the body object and still update votes", () => {
+		const newVote = { inc_votes: 1, username: "Filipe" };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(200)
+			.then((updatedArticle) => {
+				expect(updatedArticle.body.article.length).toBe(1);
+				expect(updatedArticle.body.article[0]).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 101,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	test("STATUS 200: Should consider string '2' for inc_votes and still update the article.", () => {
+		const newVote = { inc_votes: "2" };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(200)
+			.then((updatedArticle) => {
+				expect(updatedArticle.body.article.length).toBe(1);
+				expect(updatedArticle.body.article[0]).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 102,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	test("STATUS 404: Should return appropriate message for an inexistent article ID", () => {
+		const newVote = { inc_votes: 1 };
+
+		return request(app)
+			.patch("/api/articles/999")
+			.send(newVote)
+			.expect(404)
+			.then((response) => {
+				expect(response.body.status).toBe(404);
+				expect(response.body.msg).toBe("Article not found!");
+			});
+	});
+	test("STATUS 400: Should return appropriate message for an invalid id type", () => {
+		const newVote = { inc_votes: 1 };
+
+		return request(app)
+			.patch("/api/articles/ddd")
+			.send(newVote)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message for an invalid inc_votes type on the body object", () => {
+		const newVote = { inc_votes: "string" };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message for an invalid body object", () => {
+		const newVote = { update_votes: 1 };
+
+		return request(app)
+			.patch("/api/articles/1")
+			.send(newVote)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
 });
