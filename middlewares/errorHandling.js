@@ -17,6 +17,16 @@ const handlePsqlErrors = (err, req, res, next) => {
 		res.status(400).json({ status: 400, msg: "Invalid ID." });
 	}
 
+	// CODE 23502 - SQL Violation of not-null constraint
+	if (err.code === "23502") {
+		res.status(400).json({ status: 400, msg: "Bad request." });
+	}
+
+	// CODE 23503 = SQL Violation of foreign key constraint
+	if (err.code === "23503") {
+		res.status(403).json({ status: 403, msg: "Username not found." });
+	}
+
 	next(err);
 };
 
