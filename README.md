@@ -86,6 +86,8 @@ You need to create two different .env files to setup the databases as follows:
 
 **POST /api/articles/:article_id/comments** - Adds a comment to the given article, returns the added comment.
 
+Body format: { "username": "icellusedkars",	"body": "This is the icellusedkars new omment!" }
+
 ```
 "exampleResponse": {
 			"comment": [
@@ -96,6 +98,26 @@ You need to create two different .env files to setup the databases as follows:
 					"author": "icellusedkars",
 					"body": "This is the icellusedkars new comment!",
 					"article_id": "2"
+				}
+			]
+		}
+```
+**PATCH /api/articles/:article_id** - Update the number of votes for a given article by the number passed on the patch body:
+
+Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
+
+```
+"exampleResponse": {
+			"article": [
+				{
+					"article_id": "1",
+					"title": "Living in the shadow of a great man",
+					"topic": "mitch",
+					"author": "butter_bridge",
+					"body": "I find this existence challenging",
+					"created_at": "2020-07-09T21:11:00.000Z",
+					"votes": "101",
+					"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
 				}
 			]
 		}
