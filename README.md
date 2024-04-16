@@ -66,3 +66,20 @@ You need to create two different .env files to setup the databases as follows:
     ]
   }
 ```
+**/api/articles/:article_id/comments** - return an array of comments for a given article
+
+```
+
+"exampleResponse": {
+			"comments": [
+				{
+					"comment_id": "6",
+					"votes": "1",
+					"created_at": "2020-10-11T16:23:00.000Z",
+					"author": "butter_bridge",
+					"body": "This is a bad article name",
+					"article_id": "6"
+				}
+			]
+  	}
+```
