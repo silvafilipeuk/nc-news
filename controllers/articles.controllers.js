@@ -3,10 +3,13 @@ const {
 	fetchArticlesById,
 	updateArticlesById,
 } = require("../models/articles.models");
+const { fetchTopics } = require("../models/topics.models");
 
 function getArticles(req, res, next) {
-	fetchArticles()
-		.then((articles) => {
+	const { topic } = req.query;
+
+	Promise.all([fetchArticles(topic), fetchTopics(topic)])
+		.then(([articles]) => {
 			res.status(200).json({ articles: articles });
 		})
 		.catch((err) => {

@@ -71,7 +71,65 @@ describe("/api/articles", () => {
 				});
 			});
 	});
-	test("GET STATUS 400: should return appropriate message for the client when requested an invalid endpoint", () => {
+	test("GET STATUS 200: Should return an array of articles objects matching the given topic. (Query)", () => {
+		return request(app)
+			.get("/api/articles?topic=cats")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(1);
+				expect(articles.body.articles[0]).toMatchObject({
+					article_id: 5,
+					author: "rogersop",
+					title: "UNCOVERED: catspiracy to bring down democracy",
+					topic: "cats",
+					created_at: expect.any(String),
+					votes: 0,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					comment_count: 2,
+				});
+			});
+	});
+	test("GET STATUS 200: Should return an empty array if the given topic exists in the database, but have no articles.(Query)", () => {
+		return request(app)
+			.get("/api/articles?topic=paper")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(0);
+			});
+	});
+	test("GET STATUS 200: Should ignore the query and return all the articles if passed an invalid query.", () => {
+		return request(app)
+			.get("/api/articles?topicc=cats")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(13);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 404: Should return an appropriate message if the passed topic in the query does not exists.", () => {
+		return request(app)
+			.get("/api/articles?topic=football")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Topic not found.");
+			});
+	});
+	test("GET STATUS 400: Should return appropriate message for the client when requested an invalid endpoint", () => {
 		return request(app)
 			.get("/api/art1cles")
 			.expect(404)
