@@ -483,3 +483,32 @@ describe("PATCH /api/articles/:article_id", () => {
 			});
 	});
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+	test("STATUS 200: Shoud delete a given comment and respond with status 204 and no content.", () => {
+		return request(app)
+			.delete("/api/comments/13")
+			.expect(204)
+			.then((response) => {
+				expect(response.body).toEqual({});
+			});
+	});
+	test("STATUS 404: Should return appropriate message when trying to remove an inexistent comment", () => {
+		return request(app)
+			.delete("/api/comments/99")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.status).toBe(404);
+				expect(response.body.msg).toBe("Comment not found.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message when pass an invalid id to be removed", () => {
+		return request(app)
+			.delete("/api/comments/ddd")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+});

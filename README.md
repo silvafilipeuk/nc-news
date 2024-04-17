@@ -122,3 +122,8 @@ Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
 			]
 		}
 ```
+**DELETE /api/comments/:comment_id** - Delete the given comment from the databse. Returns status 204 if deleted.
+
+```
+status: 204.
+"exampleResponse": {}
