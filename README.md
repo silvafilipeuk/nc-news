@@ -30,7 +30,11 @@ You need to create two different .env files to setup the databases as follows:
     "topics": [{ "slug": "football", "description": "Footie!" }]
   } 
 ```
-**GET /api/articles** - return an array of articles objects.
+**GET /api/articles** - return an array of articles objects, filtered by the queries if passed any.
+
+Available queries: [topic]
+
+Example of call with query: /api/articles?topic=cats
 
 ```
 "exampleResponse": {
