@@ -124,6 +124,23 @@ Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
 ```
 **DELETE /api/comments/:comment_id** - Delete the given comment from the databse. Returns status 204 if deleted.
 
-```
-status: 204.
+```status: 204.
 "exampleResponse": {}
+```
+
+**GET /api/users** - Get all the users from the database. Returns an array of user objects.
+
+```
+"exampleResponse": [
+			{
+				"username": "butter_bridge",
+				"name": "jonny",
+				"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+			},
+			{
+				"username": "icellusedkars",
+				"name": "sam",
+				"avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+			}
+		]
+```

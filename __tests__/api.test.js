@@ -506,3 +506,21 @@ describe("DELETE /api/comments/:comment_id", () => {
 			});
 	});
 });
+
+describe("GET /api/users", () => {
+	test("STATUS 200: Should return an array of users objects with their respective properties:", () => {
+		return request(app)
+			.get("/api/users")
+			.expect(200)
+			.then((users) => {
+				expect(users.body.users.length).toBe(4);
+				users.body.users.forEach((user) => {
+					expect(user).toMatchObject({
+						username: expect.any(String),
+						name: expect.any(String),
+						avatar_url: expect.any(String),
+					});
+				});
+			});
+	});
+});
