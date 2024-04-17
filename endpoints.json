@@ -104,5 +104,21 @@
 		"description": "Delete the given comment from the database. Returns status 204 if deleted.",
 		"queries": [],
 		"exampleResponse": {}
+	},
+	"GET /api/users": {
+		"description": "Get all users from the database. Returns an array of user objects",
+		"queries": [],
+		"exampleResponse": [
+			{
+				"username": "butter_bridge",
+				"name": "jonny",
+				"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+			},
+			{
+				"username": "icellusedkars",
+				"name": "sam",
+				"avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+			}
+		]
 	}
 }
