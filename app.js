@@ -8,6 +8,7 @@ const {
 const {
 	getCommentsByArticleId,
 	postComment,
+	deleteCommentById,
 } = require("./controllers/comments.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getApiInfo } = require("./controllers/api.controllers");
@@ -28,6 +29,7 @@ app.get("/api/articles/:article_id", getArticlesById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
 app.patch("/api/articles/:article_id", patchVotesByArticleId);
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 // Error Handling:
 

@@ -1,6 +1,8 @@
 const {
 	fetchCommentsByArticleId,
 	insertComment,
+	selectCommentById,
+	removeCommentById,
 } = require("../models/comments.models");
 const { fetchArticlesById } = require("../models/articles.models");
 
@@ -38,4 +40,16 @@ function postComment(req, res, next) {
 		});
 }
 
-module.exports = { getCommentsByArticleId, postComment };
+function deleteCommentById(req, res, next) {
+	const { comment_id } = req.params;
+
+	Promise.all([removeCommentById(comment_id), selectCommentById(comment_id)])
+		.then(() => {
+			res.status(204).send();
+		})
+		.catch((err) => {
+			next(err);
+		});
+}
+
+module.exports = { getCommentsByArticleId, postComment, deleteCommentById };

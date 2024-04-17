@@ -99,5 +99,10 @@
 				}
 			]
 		}
+	},
+	"DELETE /api/comments/:comment_id": {
+		"description": "Delete the given comment from the database. Returns status 204 if deleted.",
+		"queries": [],
+		"exampleResponse": {}
 	}
 }
