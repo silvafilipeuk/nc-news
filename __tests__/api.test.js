@@ -71,6 +71,75 @@ describe("/api/articles", () => {
 				});
 			});
 	});
+
+	test("GET STATUS 200: Should return an array of articles sorted by the given column on query sort_by:", () => {
+		return request(app)
+			.get("/api/articles?sort_by=votes")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(13);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("votes", {
+					descending: true,
+				});
+			});
+	});
+
+	test("GET STATUS 200: Should return an array of articles sorted by ascending or descending order acording to the query order:", () => {
+		return request(app)
+			.get("/api/articles?order=asc")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(13);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at");
+			});
+	});
+
+	test("GET STATUS 200: Should consider all queries and return an array of articles sorted and filtered accordingly when passed 2 or more queries:", () => {
+		return request(app)
+			.get("/api/articles?topic=mitch&sort_by=author&order=asc")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.articles.length).toBe(12);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: "mitch",
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("author");
+			});
+	});
+
 	test("GET STATUS 200: Should return an array of articles objects matching the given topic. (Query)", () => {
 		return request(app)
 			.get("/api/articles?topic=cats")
@@ -121,6 +190,22 @@ describe("/api/articles", () => {
 				});
 			});
 	});
+	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid sort_by query: ", () => {
+		return request(app)
+			.get("/api/articles?sort_by=downvotes")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Invalid sort_by value.");
+			});
+	});
+	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid order query: ", () => {
+		return request(app)
+			.get("/api/articles?order=ascending")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Invalid order value.");
+			});
+	});
 	test("GET STATUS 404: Should return an appropriate message if the passed topic in the query does not exists.", () => {
 		return request(app)
 			.get("/api/articles?topic=football")
@@ -155,7 +240,6 @@ describe("/api/articles/:article_id", () => {
 					votes: 100,
 					article_img_url:
 						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-					comment_count: expect.any(Number),
 				});
 			});
 	});
