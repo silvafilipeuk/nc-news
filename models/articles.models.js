@@ -19,7 +19,14 @@ function fetchArticles(topic) {
 
 function fetchArticlesById(article_id) {
 	return db
-		.query("SELECT * FROM articles WHERE article_id = $1", [article_id])
+		.query(
+			`SELECT a.*, count(b.article_id)::int as comment_count FROM articles a 
+			LEFT JOIN comments b
+			ON a.article_id = b.article_id
+			WHERE a. article_id = $1
+			GROUP BY a.article_id`,
+			[article_id]
+		)
 		.then((article) => {
 			if (article.rows.length === 0) {
 				return Promise.reject({
