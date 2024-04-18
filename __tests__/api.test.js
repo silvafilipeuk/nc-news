@@ -666,4 +666,26 @@ describe("GET /api/users", () => {
 				});
 			});
 	});
+	test("STATUS 200: Should return an array with the user object passed as parameter:", () => {
+		return request(app)
+			.get("/api/users/icellusedkars")
+			.expect(200)
+			.then((user) => {
+				expect(user.body.user.length).toBe(1);
+				expect(user.body.user[0]).toMatchObject({
+					username: "icellusedkars",
+					name: "sam",
+					avatar_url:
+						"https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
+				});
+			});
+	});
+	test("STATUS 404: Should return an appropriate message if the passed user does not exists:", () => {
+		return request(app)
+			.get("/api/users/sam")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Username not found.");
+			});
+	});
 });
