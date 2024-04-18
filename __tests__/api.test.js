@@ -129,7 +129,7 @@ describe("/api/articles", () => {
 				expect(response.body.msg).toBe("Topic not found.");
 			});
 	});
-	test("GET STATUS 400: Should return appropriate message for the client when requested an invalid endpoint", () => {
+	test("GET STATUS 404: Should return appropriate message for the client when requested an invalid endpoint", () => {
 		return request(app)
 			.get("/api/art1cles")
 			.expect(404)
