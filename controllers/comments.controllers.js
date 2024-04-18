@@ -2,6 +2,7 @@ const {
 	fetchCommentsByArticleId,
 	insertComment,
 	selectCommentById,
+	updateVotesByCommentId,
 	removeCommentById,
 } = require("../models/comments.models");
 const { fetchArticlesById } = require("../models/articles.models");
@@ -40,6 +41,22 @@ function postComment(req, res, next) {
 		});
 }
 
+function patchVotesByCommentId(req, res, next) {
+	const { inc_votes } = req.body;
+	const { comment_id } = req.params;
+
+	Promise.all([
+		updateVotesByCommentId(comment_id, inc_votes),
+		selectCommentById(comment_id),
+	])
+		.then(([comment]) => {
+			res.status(200).json({ comment: comment });
+		})
+		.catch((err) => {
+			next(err);
+		});
+}
+
 function deleteCommentById(req, res, next) {
 	const { comment_id } = req.params;
 
@@ -52,4 +69,9 @@ function deleteCommentById(req, res, next) {
 		});
 }
 
-module.exports = { getCommentsByArticleId, postComment, deleteCommentById };
+module.exports = {
+	getCommentsByArticleId,
+	postComment,
+	patchVotesByCommentId,
+	deleteCommentById,
+};

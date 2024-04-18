@@ -511,7 +511,7 @@ describe("PATCH /api/articles/:article_id", () => {
 				});
 			});
 	});
-	test("STATUS 200: Should update the article votes to ZERO when trying to decrease more than the current number of votes", () => {
+	test("STATUS 200: Should update the article votes to negative numbers when trying to decrease more than the current number of votes", () => {
 		const newVote = { inc_votes: -110 };
 
 		return request(app)
@@ -527,7 +527,7 @@ describe("PATCH /api/articles/:article_id", () => {
 					author: "butter_bridge",
 					body: "I find this existence challenging",
 					created_at: expect.any(String),
-					votes: 0,
+					votes: -10,
 					article_img_url:
 						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
 				});
@@ -645,6 +645,129 @@ describe("DELETE /api/comments/:comment_id", () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.status).toBe(400);
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+});
+
+describe("PATCH /api/comments/:comment_id", () => {
+	test("STATUS 200: Should update the number of votes for a comment based on the given body value:", () => {
+		const newVotes = { inc_votes: 50 };
+
+		return request(app)
+			.patch("/api/comments/3")
+			.send(newVotes)
+			.expect(200)
+			.then((comment) => {
+				expect(comment.body.comment.length).toBe(1);
+				expect(comment.body.comment[0]).toMatchObject({
+					comment_id: 3,
+					body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+					article_id: 1,
+					author: "icellusedkars",
+					votes: 150,
+					created_at: expect.any(String),
+				});
+			});
+	});
+	test("STATUS 200: Should update the number of votes for a comment based on the given body value: (Testing for negative updates)", () => {
+		const newVotes = { inc_votes: -50 };
+
+		return request(app)
+			.patch("/api/comments/3")
+			.send(newVotes)
+			.expect(200)
+			.then((comment) => {
+				expect(comment.body.comment.length).toBe(1);
+				expect(comment.body.comment[0]).toMatchObject({
+					comment_id: 3,
+					body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+					article_id: 1,
+					author: "icellusedkars",
+					votes: 50,
+					created_at: expect.any(String),
+				});
+			});
+	});
+	test("STATUS 200: Should update the number of votes for a comment based on the given body value: (Testing for votes being negative after the update)", () => {
+		const newVotes = { inc_votes: -150 };
+
+		return request(app)
+			.patch("/api/comments/3")
+			.send(newVotes)
+			.expect(200)
+			.then((comment) => {
+				expect(comment.body.comment.length).toBe(1);
+				expect(comment.body.comment[0]).toMatchObject({
+					comment_id: 3,
+					body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+					article_id: 1,
+					author: "icellusedkars",
+					votes: -50,
+					created_at: expect.any(String),
+				});
+			});
+	});
+	test("STATUS 200: Should ignore unecessary fields on the body and still update the comment votes.", () => {
+		const newVotes = { inc_votes: 1, username: "Filipe" };
+
+		return request(app)
+			.patch("/api/comments/3")
+			.send(newVotes)
+			.expect(200)
+			.then((comment) => {
+				expect(comment.body.comment.length).toBe(1);
+				expect(comment.body.comment[0]).toMatchObject({
+					comment_id: 3,
+					body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+					article_id: 1,
+					author: "icellusedkars",
+					votes: 101,
+					created_at: expect.any(String),
+				});
+			});
+	});
+	test("STATUS 404: Should return appropriate message for an inexistent comment id.", () => {
+		const newVotes = { inc_votes: 1 };
+
+		return request(app)
+			.patch("/api/comments/999")
+			.send(newVotes)
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Comment not found.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message for an invalid comment id type.", () => {
+		const newVotes = { inc_votes: 1 };
+
+		return request(app)
+			.patch("/api/comments/ddd")
+			.send(newVotes)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message for an invalid inc_votes type in the passed body.", () => {
+		const newVotes = { inc_votes: "string" };
+
+		return request(app)
+			.patch("/api/comments/3")
+			.send(newVotes)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message for an invalid body.", () => {
+		const newVotes = { update_votes: "string" };
+
+		return request(app)
+			.patch("/api/comments/3")
+			.send(newVotes)
+			.expect(400)
+			.then((response) => {
 				expect(response.body.msg).toBe("Bad request.");
 			});
 	});

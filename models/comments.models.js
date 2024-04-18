@@ -42,6 +42,18 @@ function selectCommentById(comment_id) {
 		});
 }
 
+function updateVotesByCommentId(comment_id, inc_votes) {
+	return db
+		.query(
+			`UPDATE comments SET votes = votes + $2
+			WHERE comment_id = $1 RETURNING *`,
+			[comment_id, inc_votes]
+		)
+		.then((comment) => {
+			return comment.rows;
+		});
+}
+
 function removeCommentById(comment_id) {
 	return db
 		.query("DELETE FROM comments WHERE comment_id = $1", [comment_id])
@@ -54,5 +66,6 @@ module.exports = {
 	fetchCommentsByArticleId,
 	insertComment,
 	selectCommentById,
+	updateVotesByCommentId,
 	removeCommentById,
 };
