@@ -51,6 +51,7 @@
 Available queries: [topic,sort_by,order]
 
 Examples of cals with query: /api/articles?topic=cats
+
 Examples of cals with query: /api/articles?topic=coding&sort_by=title&order=asc
 
 ```
