@@ -4,7 +4,7 @@
 - It consists of an backend API for a news system similar to Reddit, where users can post **articles** of different **topics**. The users can also post **comments** on the articles.
 - Articles and topics can receive **upvotes** and **downvotes** from users, considering that they did like or not the content.
 
-**A live hosted version of this project can be found at:** - 
+**A live hosted version of this project can be found at:** - https://nc-news-vvzg.onrender.com/api 
 
 ## Setup instructions:
 
