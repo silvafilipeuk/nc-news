@@ -1,5 +1,11 @@
 # Northcoders News API
 
+- This project was created as part of the Northcoders software development bootcamp.
+- It consists of an backend API for a news system similar to Reddit, where users can post **articles** of different **topics**. The users can also post **comments** on the articles.
+- Articles and topics can receive **upvotes** and **downvotes** from users, considering that they did like or not the content.
+
+**A live hosted version of this project can be found at:** - 
+
 ## Setup instructions:
 
 **The project uses two different databases for different purposes:**
@@ -7,7 +13,8 @@
 -   Test database: used during the testing phase.
 -   Dev database: used during development phase.
 
-You need to create two different .env files to setup the databases as follows:
+> [!IMPORTANT]
+> You need to create two different .env files to setup the databases as follows:
 
 -   **.env.development** - Uses the development database, set the variable PGDATABASE to the correct database (PGDATABASE=database_name_here)
 
@@ -15,9 +22,18 @@ You need to create two different .env files to setup the databases as follows:
 
 -   Please refer to db/setup.sql file for the correct database names, and also to create the databases locally;
 
--   **To install the databases:** npm run setup-dbs on your terminal.
+-   **To install the databases:** - npm run setup-dbs on your terminal.
 
--   **To seed the databases:** npm run seed
+-   **To seed the databases:** - npm run seed
+
+-	**To install the project dependencies:** - npm install
+
+-	**To run the project tests:** - npm run test
+
+***Minimum versions to run the project***
+
+- **Node.js**: - ^v21.5.0
+- **ProstgreSQL:** - ^8.7.3
 
 # API endpoints:
 
