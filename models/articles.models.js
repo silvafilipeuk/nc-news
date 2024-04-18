@@ -1,6 +1,24 @@
 const db = require("../db/connection");
 
-function fetchArticles(topic) {
+function fetchArticles(topic, sort_by = "created_at", order = "desc") {
+	if (!["asc", "desc"].includes(order)) {
+		return Promise.reject({ status: 400, msg: "Invalid order value." });
+	}
+
+	if (
+		![
+			"article_id",
+			"title",
+			"topic",
+			"author",
+			"body",
+			"created_at",
+			"votes",
+		].includes(sort_by)
+	) {
+		return Promise.reject({ status: 400, msg: "Invalid sort_by value." });
+	}
+
 	let sqlString = `SELECT a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url, count(b.article_id)::int as comment_count FROM articles a
 	LEFT JOIN comments b
 	ON a.article_id = b.article_id `;
@@ -10,7 +28,7 @@ function fetchArticles(topic) {
 	}
 
 	sqlString += `GROUP BY a.article_id
-	ORDER BY a.created_at desc`;
+	ORDER BY a.${sort_by} ${order}`;
 
 	return db.query(sqlString).then((articles) => {
 		return articles.rows;

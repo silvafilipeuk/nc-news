@@ -48,9 +48,10 @@
 ```
 **GET /api/articles** - return an array of articles objects, filtered by the queries if passed any.
 
-Available queries: [topic]
+Available queries: [topic,sort_by,order]
 
-Example of call with query: /api/articles?topic=cats
+Examples of cals with query: /api/articles?topic=cats
+Examples of cals with query: /api/articles?topic=coding&sort_by=title&order=asc
 
 ```
 "exampleResponse": {

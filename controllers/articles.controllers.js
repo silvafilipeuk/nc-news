@@ -6,9 +6,9 @@ const {
 const { fetchTopics } = require("../models/topics.models");
 
 function getArticles(req, res, next) {
-	const { topic } = req.query;
+	const { sort_by, topic, order } = req.query;
 
-	Promise.all([fetchArticles(topic), fetchTopics(topic)])
+	Promise.all([fetchArticles(topic, sort_by, order), fetchTopics(topic)])
 		.then(([articles]) => {
 			res.status(200).json({ articles: articles });
 		})
