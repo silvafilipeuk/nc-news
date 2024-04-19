@@ -48,7 +48,17 @@
 ```
 **GET /api/articles** - return an array of articles objects, filtered by the queries if passed any.
 
-Available queries: [topic,sort_by,order]
+Available queries: [topic,sort_by,order,limit,p]
+
+Topic: filter by the specified topic.
+
+sort_by: sort by the specified column.
+
+order: order asc or desc.
+
+limit: limit of articles per page.
+
+p: page number from where the system will start selecting articles.
 
 Examples of cals with query: /api/articles?topic=cats
 
