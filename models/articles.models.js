@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { convertTimestampToDate } = require("../db/seeds/utils");
 
 function fetchArticles(topic, sort_by = "created_at", order = "desc") {
 	if (!["asc", "desc"].includes(order)) {
@@ -72,4 +73,39 @@ function updateArticlesById(article_id, inc_votes) {
 		});
 }
 
-module.exports = { fetchArticles, fetchArticlesById, updateArticlesById };
+function insertArticle(article) {
+	const { created_at } = convertTimestampToDate({
+		created_at: new Date().getTime(),
+	});
+
+	if (!article.article_img_url) {
+		article.article_img_url =
+			"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700";
+	}
+
+	return db
+		.query(
+			`INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+			[
+				article.title,
+				article.topic,
+				article.author,
+				article.body,
+				created_at,
+				0,
+				article.article_img_url,
+			]
+		)
+		.then((article) => {
+			article.rows[0].comment_count = 0;
+			return article.rows;
+		});
+}
+
+module.exports = {
+	fetchArticles,
+	fetchArticlesById,
+	updateArticlesById,
+	insertArticle,
+};
