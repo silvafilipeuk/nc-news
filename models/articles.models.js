@@ -19,6 +19,13 @@ function fetchArticles(
 		});
 	}
 
+	if (!/^[\d]{1,}/.test(p)) {
+		return Promise.reject({
+			status: 400,
+			msg: "Invalid p query value.",
+		});
+	}
+
 	if (
 		![
 			"article_id",

@@ -127,8 +127,15 @@ Body: {
 ```
 **GET /api/articles/:article_id/comments** - return an array of comments for a given article
 
-```
+Available queries: limit and p.
 
+limit - limit the results by the amount specified. I.e: limit=5
+
+p - starting p from where the system will start fetching comments. I.e: p=2
+
+Example of call with queries: /api/articles/1/comments?limit=5&p=2
+
+```
 "exampleResponse": {
 	"comments": [
 	{

@@ -333,6 +333,14 @@ describe("/api/articles", () => {
 				expect(response.body.msg).toBe("Invalid limit query value.");
 			});
 	});
+	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid p query value: ", () => {
+		return request(app)
+			.get("/api/articles?p=B10")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Invalid p query value.");
+			});
+	});
 	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid order query: ", () => {
 		return request(app)
 			.get("/api/articles?order=ascending")
@@ -426,7 +434,71 @@ describe("/api/articles/:article_id/comments", () => {
 			.get("/api/articles/1/comments")
 			.expect(200)
 			.then((comments) => {
-				expect(comments.body.comments.length).toBe(11);
+				expect(comments.body.comments.length).toBeGreaterThan(9);
+				comments.body.comments.forEach((comment) => {
+					expect(comment).toMatchObject({
+						comment_id: expect.any(Number),
+						body: expect.any(String),
+						votes: expect.any(Number),
+						author: expect.any(String),
+						article_id: expect.any(Number),
+						created_at: expect.any(String),
+					});
+				});
+				expect(comments.body.comments).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: should consider limit query and return an array of comments for the given article_id limited by the query number.", () => {
+		return request(app)
+			.get("/api/articles/1/comments?limit=5")
+			.expect(200)
+			.then((comments) => {
+				expect(comments.body.comments.length).toBe(5);
+				comments.body.comments.forEach((comment) => {
+					expect(comment).toMatchObject({
+						comment_id: expect.any(Number),
+						body: expect.any(String),
+						votes: expect.any(Number),
+						author: expect.any(String),
+						article_id: expect.any(Number),
+						created_at: expect.any(String),
+					});
+				});
+				expect(comments.body.comments).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: should consider limit query and p query return an array of comments for the given article_id limited by the query number, starting from p.", () => {
+		return request(app)
+			.get("/api/articles/1/comments?limit=8&p=2")
+			.expect(200)
+			.then((comments) => {
+				expect(comments.body.comments.length).toBe(3);
+				comments.body.comments.forEach((comment) => {
+					expect(comment).toMatchObject({
+						comment_id: expect.any(Number),
+						body: expect.any(String),
+						votes: expect.any(Number),
+						author: expect.any(String),
+						article_id: expect.any(Number),
+						created_at: expect.any(String),
+					});
+				});
+				expect(comments.body.comments).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: Should return and empty array if the p query is > the number of pages to show all articles.", () => {
+		return request(app)
+			.get("/api/articles/1/comments?p=3")
+			.expect(200)
+			.then((comments) => {
+				console.log(comments.body.comments);
+				expect(comments.body.comments.length).toBe(0);
 				comments.body.comments.forEach((comment) => {
 					expect(comment).toMatchObject({
 						comment_id: expect.any(Number),
@@ -448,6 +520,22 @@ describe("/api/articles/:article_id/comments", () => {
 			.expect(200)
 			.then((comments) => {
 				expect(comments.body.comments.length).toBe(0);
+			});
+	});
+	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid limit query value: ", () => {
+		return request(app)
+			.get("/api/articles/1/comments?limit=B10")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Invalid limit query value.");
+			});
+	});
+	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid p query value: ", () => {
+		return request(app)
+			.get("/api/articles/1/comments?p=B10")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Invalid p query value.");
 			});
 	});
 	test("GET STATUS 404: should return an appropriate message if the article does not exist.", () => {

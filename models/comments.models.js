@@ -1,15 +1,33 @@
 const db = require("../db/connection");
 const { convertTimestampToDate } = require("../db/seeds/utils");
 
-function fetchCommentsByArticleId(article_id) {
-	return db
-		.query(
-			"select * FROM comments WHERE article_id = $1 order by created_at desc",
-			[article_id]
-		)
-		.then((comments) => {
-			return comments.rows;
+function fetchCommentsByArticleId(article_id, limit = 10, p = 1) {
+	let sqlString = `select * FROM comments WHERE article_id = '${article_id}' order by created_at desc `;
+
+	if (!/^[\d]{1,}/.test(limit)) {
+		return Promise.reject({
+			status: 400,
+			msg: "Invalid limit query value.",
 		});
+	}
+
+	if (!/^[\d]{1,}/.test(p)) {
+		return Promise.reject({
+			status: 400,
+			msg: "Invalid p query value.",
+		});
+	}
+
+	if (limit) {
+		sqlString += `limit ${limit} `;
+	}
+	if (p) {
+		sqlString += `offset ${limit * (p - 1)}`;
+	}
+
+	return db.query(sqlString).then((comments) => {
+		return comments.rows;
+	});
 }
 
 function insertComment(article_id, username, body) {
