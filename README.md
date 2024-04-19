@@ -70,24 +70,50 @@ Examples of cals with query: /api/articles?topic=coding&sort_by=title&order=asc
     ]
   }
 ```
+**POST /api/articles** - Post a new article in the database, returns the posted article object.
+
+Body: {
+	"author": "rogersop",
+	"title": "The new rogersop Article!",
+	"body": "That should be a very interesting article, but I can't think of what to write in here.",
+	"topic": "paper",
+	"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+}
+
+```
+"exampleResponse": {
+"article": [
+	{
+		"article_id": 14,
+		"title": "The new rogersop Article!",
+		"topic": "paper",
+		"author": "rogersop",
+		"body": "That should be a very interesting article, but I can't think of what to write in here.",
+		"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+		"created_at": "2024-04-19T12:09:00.000Z",
+		"votes": 0,
+		"comment_count": 0
+	}]
+}
+```
+
 
 **GET /api/articles/:article_id** - return an array with the object corresponding to the given id
 ```
-  "exampleResponse": {
-    "article": [
-      {
-        "article_id": 1,
-        "title": "Living in the shadow of a great man",
-        "topic": "mitch",
-        "author": "butter_bridge",
-        "body": "I find this existence challenging",
-        "created_at": "2020-07-09T20:11:00.000Z",
-        "votes": 100,
-        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+"exampleResponse": {
+"article": [
+	{
+		"article_id": 1,
+		"title": "Living in the shadow of a great man",
+		"topic": "mitch",
+		"author": "butter_bridge",
+		"body": "I find this existence challenging",
+		"created_at": "2020-07-09T20:11:00.000Z",
+		"votes": 100,
+		"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
 		"comment_count": 11
-      }
-    ]
-  }
+	}]
+}
 ```
 **GET /api/articles/:article_id/comments** - return an array of comments for a given article
 
@@ -95,15 +121,14 @@ Examples of cals with query: /api/articles?topic=coding&sort_by=title&order=asc
 
 "exampleResponse": {
 	"comments": [
-		{
-			"comment_id": "6",
-			"votes": "1",
-			"created_at": "2020-10-11T16:23:00.000Z",
-			"author": "butter_bridge",
-			"body": "This is a bad article name",
-			"article_id": "6"
-		}
-	]
+	{
+		"comment_id": "6",
+		"votes": "1",
+		"created_at": "2020-10-11T16:23:00.000Z",
+		"author": "butter_bridge",
+		"body": "This is a bad article name",
+		"article_id": "6"
+	}]
 }
 ```
 
@@ -113,16 +138,15 @@ Body format: { "username": "icellusedkars",	"body": "This is the icellusedkars n
 
 ```
 "exampleResponse": {
-	"comment": [
-		{
-			"comment_id": "19",
-			"votes": "0",
-			"created_at": "2024-04-16T14:59:56.973Z",
-			"author": "icellusedkars",
-			"body": "This is the icellusedkars new comment!",
-			"article_id": "2"
-		}
-	]
+"comment": [
+	{
+		"comment_id": "19",
+		"votes": "0",
+		"created_at": "2024-04-16T14:59:56.973Z",
+		"author": "icellusedkars",
+		"body": "This is the icellusedkars new comment!",
+		"article_id": "2"
+	}]
 }
 ```
 **PATCH /api/articles/:article_id** - Update the number of votes for a given article by the number passed on the patch body:
@@ -131,18 +155,17 @@ Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
 
 ```
 "exampleResponse": {
-	"article": [
-		{
-			"article_id": "1",
-			"title": "Living in the shadow of a great man",
-			"topic": "mitch",
-			"author": "butter_bridge",
-			"body": "I find this existence challenging",
-			"created_at": "2020-07-09T21:11:00.000Z",
-			"votes": "101",
-			"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-		}
-	]
+"article": [
+	{
+		"article_id": "1",
+		"title": "Living in the shadow of a great man",
+		"topic": "mitch",
+		"author": "butter_bridge",
+		"body": "I find this existence challenging",
+		"created_at": "2020-07-09T21:11:00.000Z",
+		"votes": "101",
+		"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+	}]
 }
 ```
 **DELETE /api/comments/:comment_id** - Delete the given comment from the databse. Returns status 204 if deleted.
@@ -172,12 +195,12 @@ Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
 
 ```
 "exampleResponse": [
-			{
-				"username": "butter_bridge",
-				"name": "jonny",
-				"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-			}
-		]
+	{
+		"username": "butter_bridge",
+		"name": "jonny",
+		"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+	}
+]
 ```
 
 **PATCH /api/comments/:comment_id** - Update the number of votes for a given comment. Returns the updated comment.
@@ -187,16 +210,15 @@ Example of body: { inc_votes: 1 }
 
 ```
 "exampleResponse": {
-	"comment": [
-		{
-			"comment_id": "19",
-			"votes": "1",
-			"created_at": "2024-04-16T14:59:56.973Z",
-			"author": "icellusedkars",
-			"body": "This is the icellusedkars new comment!",
-			"article_id": "2"
-		}
-	]
+"comment": [
+	{
+		"comment_id": "19",
+		"votes": "1",
+		"created_at": "2024-04-16T14:59:56.973Z",
+		"author": "icellusedkars",
+		"body": "This is the icellusedkars new comment!",
+		"article_id": "2"
+	}]
 }
 
 ```
