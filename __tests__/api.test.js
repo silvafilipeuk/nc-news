@@ -812,3 +812,140 @@ describe("GET /api/users", () => {
 			});
 	});
 });
+
+describe("POST /api/articles", () => {
+	test("STATUS 201: Should post an article in the database and returns the posted article object.", () => {
+		const newPost = {
+			author: "rogersop",
+			title: "The new rogersop Article!",
+			body: "That should be a very interesting article, but I can't think of what to write in here.",
+			topic: "paper",
+			article_img_url:
+				"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+		};
+
+		return request(app)
+			.post("/api/articles")
+			.send(newPost)
+			.expect(201)
+			.then((article) => {
+				expect(article.body.article.length).toBe(1);
+				expect(article.body.article[0]).toMatchObject({
+					author: "rogersop",
+					title: "The new rogersop Article!",
+					body: "That should be a very interesting article, but I can't think of what to write in here.",
+					topic: "paper",
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					article_id: expect.any(Number),
+					votes: 0,
+					created_at: expect.any(String),
+					comment_count: 0,
+				});
+			});
+	});
+	test("STATUS 201: Should ignore not needed fields and still post an article in the database and returns the posted article object.", () => {
+		const newPost = {
+			author: "rogersop",
+			title: "The new rogersop Article!",
+			body: "That should be a very interesting article, but I can't think of what to write in here.",
+			topic: "paper",
+			article_img_url:
+				"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+			votes: 1,
+		};
+
+		return request(app)
+			.post("/api/articles")
+			.send(newPost)
+			.expect(201)
+			.then((article) => {
+				expect(article.body.article.length).toBe(1);
+				expect(article.body.article[0]).toMatchObject({
+					author: "rogersop",
+					title: "The new rogersop Article!",
+					body: "That should be a very interesting article, but I can't think of what to write in here.",
+					topic: "paper",
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					article_id: expect.any(Number),
+					votes: 0,
+					created_at: expect.any(String),
+					comment_count: 0,
+				});
+			});
+	});
+	test("STATUS 201: Should use the default img_url if body have no article_img_url.", () => {
+		const newPost = {
+			author: "rogersop",
+			title: "The new rogersop Article!",
+			body: "That should be a very interesting article, but I can't think of what to write in here.",
+			topic: "paper",
+		};
+
+		return request(app)
+			.post("/api/articles")
+			.send(newPost)
+			.expect(201)
+			.then((article) => {
+				expect(article.body.article.length).toBe(1);
+				expect(article.body.article[0]).toMatchObject({
+					author: "rogersop",
+					title: "The new rogersop Article!",
+					body: "That should be a very interesting article, but I can't think of what to write in here.",
+					topic: "paper",
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					article_id: expect.any(Number),
+					votes: 0,
+					created_at: expect.any(String),
+					comment_count: 0,
+				});
+			});
+	});
+	test("STATUS 400: Should return appropriate message for the client if passed a body with missing mandatory fields.", () => {
+		const newPost = {
+			// Missing author
+			title: "The new rogersop Article!",
+			body: "That should be a very interesting article, but I can't think of what to write in here.",
+			topic: "paper",
+		};
+		return request(app)
+			.post("/api/articles")
+			.send(newPost)
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
+			});
+	});
+	test("STATUS 404: Should return appropriate message for the client if passed an username that does not exists in the database.", () => {
+		const newPost = {
+			author: "filipe",
+			title: "The new rogersop Article!",
+			body: "That should be a very interesting article, but I can't think of what to write in here.",
+			topic: "paper",
+		};
+		return request(app)
+			.post("/api/articles")
+			.send(newPost)
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Author not found.");
+			});
+	});
+	test("STATUS 404: Should return appropriate message for the client if passed an topic that does not exists in the database.", () => {
+		const newPost = {
+			author: "rogersop",
+			title: "The new rogersop Article!",
+			body: "That should be a very interesting article, but I can't think of what to write in here.",
+			topic: "coding",
+		};
+		return request(app)
+			.post("/api/articles")
+			.send(newPost)
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Topic not found.");
+			});
+	});
+});

@@ -2,6 +2,7 @@ const {
 	fetchArticles,
 	fetchArticlesById,
 	updateArticlesById,
+	insertArticle,
 } = require("../models/articles.models");
 const { fetchTopics } = require("../models/topics.models");
 
@@ -45,4 +46,21 @@ function patchVotesByArticleId(req, res, next) {
 		});
 }
 
-module.exports = { getArticles, getArticlesById, patchVotesByArticleId };
+function postArticle(req, res, next) {
+	const article = req.body;
+
+	insertArticle(article)
+		.then((article) => {
+			res.status(201).json({ article: article });
+		})
+		.catch((err) => {
+			next(err);
+		});
+}
+
+module.exports = {
+	getArticles,
+	getArticlesById,
+	patchVotesByArticleId,
+	postArticle,
+};
