@@ -54,7 +54,7 @@ describe("/api/articles", () => {
 			.get("/api/articles")
 			.expect(200)
 			.then((articles) => {
-				expect(articles.body.articles.length).toBe(13);
+				expect(articles.body.articles.length).toBeGreaterThan(9);
 				expect(articles.body.articles[0]).toMatchObject({
 					article_id: 3,
 					author: "icellusedkars",
@@ -77,7 +77,7 @@ describe("/api/articles", () => {
 			.get("/api/articles?sort_by=votes")
 			.expect(200)
 			.then((articles) => {
-				expect(articles.body.articles.length).toBe(13);
+				expect(articles.body.articles.length).toBeGreaterThan(9);
 				articles.body.articles.forEach((article) => {
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
@@ -101,7 +101,7 @@ describe("/api/articles", () => {
 			.get("/api/articles?order=asc")
 			.expect(200)
 			.then((articles) => {
-				expect(articles.body.articles.length).toBe(13);
+				expect(articles.body.articles.length).toBeGreaterThan(9);
 				articles.body.articles.forEach((article) => {
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
@@ -123,7 +123,7 @@ describe("/api/articles", () => {
 			.get("/api/articles?topic=mitch&sort_by=author&order=asc")
 			.expect(200)
 			.then((articles) => {
-				expect(articles.body.articles.length).toBe(12);
+				expect(articles.body.articles.length).toBeGreaterThan(9);
 				articles.body.articles.forEach((article) => {
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
@@ -172,7 +172,134 @@ describe("/api/articles", () => {
 			.get("/api/articles?topicc=cats")
 			.expect(200)
 			.then((articles) => {
-				expect(articles.body.articles.length).toBe(13);
+				expect(articles.body.articles.length).toBeGreaterThan(9);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: Should consider the query limit to limit the number of returned articles for pagination.", () => {
+		return request(app)
+			.get("/api/articles?limit=5")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.total_count).toBe(13);
+				expect(articles.body.articles.length).toBe(5);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: Should consider the query limit to limit the number of returned articles for pagination, even when applied other filter", () => {
+		return request(app)
+			.get("/api/articles?limit=5&topic=mitch")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.total_count).toBe(12);
+				expect(articles.body.articles.length).toBe(5);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: "mitch",
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: Should ignore the query limit if filtered by a topic that have 0 articles.", () => {
+		return request(app)
+			.get("/api/articles?limit=5&topic=paper")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.total_count).toBe(0);
+				expect(articles.body.articles.length).toBe(0);
+			});
+	});
+	test("GET STATUS 200: Should consider all queries with limit and return an array of articles sorted and filtered accordingly when passed 2 or more queries:", () => {
+		return request(app)
+			.get("/api/articles?topic=mitch&sort_by=author&order=asc&limit=4")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.total_count).toBe(12);
+				expect(articles.body.articles.length).toBe(4);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: "mitch",
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("author");
+			});
+	});
+	test("GET STATUS 200: Should consider the query p to set the starting page of the returned articles for pagination.", () => {
+		return request(app)
+			.get("/api/articles?limit=5&p=2")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.total_count).toBe(13);
+				expect(articles.body.articles.length).toBe(5);
+				articles.body.articles.forEach((article) => {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						author: expect.any(String),
+						title: expect.any(String),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				});
+				expect(articles.body.articles).toBeSortedBy("created_at", {
+					descending: true,
+				});
+			});
+	});
+	test("GET STATUS 200: Should consider the query p and return 0 articles if P > number of pages needed to show all articles.", () => {
+		return request(app)
+			.get("/api/articles?limit=5&p=4")
+			.expect(200)
+			.then((articles) => {
+				expect(articles.body.total_count).toBe(13);
+				expect(articles.body.articles.length).toBe(0);
 				articles.body.articles.forEach((article) => {
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
@@ -196,6 +323,14 @@ describe("/api/articles", () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.msg).toBe("Invalid sort_by value.");
+			});
+	});
+	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid limit query value: ", () => {
+		return request(app)
+			.get("/api/articles?limit=B10")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Invalid limit query value.");
 			});
 	});
 	test("GET STATUS 400: Shoud return an appropriate message when passed an invalid order query: ", () => {
