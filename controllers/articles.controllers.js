@@ -1,17 +1,25 @@
 const {
 	fetchArticles,
 	fetchArticlesById,
+	fetchTotalArticles,
 	updateArticlesById,
 	insertArticle,
 } = require("../models/articles.models");
 const { fetchTopics } = require("../models/topics.models");
 
 function getArticles(req, res, next) {
-	const { sort_by, topic, order } = req.query;
+	const { sort_by, topic, order, limit, p } = req.query;
 
-	Promise.all([fetchArticles(topic, sort_by, order), fetchTopics(topic)])
-		.then(([articles]) => {
-			res.status(200).json({ articles: articles });
+	Promise.all([
+		fetchArticles(topic, sort_by, order, limit, p),
+		fetchTotalArticles(topic),
+		fetchTopics(topic),
+	])
+		.then(([articles, total_articles]) => {
+			res.status(200).json({
+				articles: articles,
+				total_count: Number(total_articles),
+			});
 		})
 		.catch((err) => {
 			next(err);

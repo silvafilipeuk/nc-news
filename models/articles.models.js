@@ -1,9 +1,22 @@
 const db = require("../db/connection");
 const { convertTimestampToDate } = require("../db/seeds/utils");
 
-function fetchArticles(topic, sort_by = "created_at", order = "desc") {
+function fetchArticles(
+	topic,
+	sort_by = "created_at",
+	order = "desc",
+	limit = 10,
+	p = 1
+) {
 	if (!["asc", "desc"].includes(order)) {
 		return Promise.reject({ status: 400, msg: "Invalid order value." });
+	}
+
+	if (!/^[\d]{1,}/.test(limit)) {
+		return Promise.reject({
+			status: 400,
+			msg: "Invalid limit query value.",
+		});
 	}
 
 	if (
@@ -20,7 +33,8 @@ function fetchArticles(topic, sort_by = "created_at", order = "desc") {
 		return Promise.reject({ status: 400, msg: "Invalid sort_by value." });
 	}
 
-	let sqlString = `SELECT a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url, count(b.article_id)::int as comment_count FROM articles a
+	let sqlString = `SELECT a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url, 
+	count(b.article_id)::int as comment_count FROM articles a
 	LEFT JOIN comments b
 	ON a.article_id = b.article_id `;
 
@@ -29,7 +43,7 @@ function fetchArticles(topic, sort_by = "created_at", order = "desc") {
 	}
 
 	sqlString += `GROUP BY a.article_id
-	ORDER BY a.${sort_by} ${order}`;
+	ORDER BY a.${sort_by} ${order} LIMIT ${limit} OFFSET ${limit * (p - 1)}`;
 
 	return db.query(sqlString).then((articles) => {
 		return articles.rows;
@@ -103,9 +117,21 @@ function insertArticle(article) {
 		});
 }
 
+function fetchTotalArticles(topic) {
+	let sqlString = `SELECT COUNT(article_id) as total_count FROM articles `;
+
+	if (topic) {
+		sqlString += `WHERE topic='${topic}'`;
+	}
+	return db.query(sqlString).then((total_count) => {
+		return total_count.rows[0].total_count;
+	});
+}
+
 module.exports = {
 	fetchArticles,
 	fetchArticlesById,
 	updateArticlesById,
 	insertArticle,
+	fetchTotalArticles,
 };
