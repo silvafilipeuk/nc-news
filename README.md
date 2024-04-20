@@ -142,6 +142,9 @@
 	}]
 }
 ```
+
+**DELETE /api/articles/:article_id** - Delete a given article and it's comments from the database. Return status 204 on success.
+
 **GET /api/articles/:article_id/comments** - return an array of comments for a given article
 
 **Available queries:** limit and p.

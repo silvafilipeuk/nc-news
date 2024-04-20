@@ -46,6 +46,11 @@
 			]
 		}
 	},
+	"DELETE /api/articles/:article_id": {
+		"description": "Delete the given article and it's respective comments from the database. Returns status 204.",
+		"queries": [],
+		"exampleResponse": { "status": 204 }
+	},
 	"POST /api/articles": {
 		"description": "Post a new article to the database, returns the posted article object.",
 		"queries": [],
