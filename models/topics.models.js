@@ -14,4 +14,15 @@ function fetchTopics(topic) {
 	});
 }
 
-module.exports = { fetchTopics };
+function insertTopic(newTopic) {
+	return db
+		.query(
+			"INSERT INTO topics (slug,description) VALUES ($1, $2) RETURNING *;",
+			[newTopic.slug, newTopic.description]
+		)
+		.then((newTopic) => {
+			return newTopic.rows;
+		});
+}
+
+module.exports = { fetchTopics, insertTopic };

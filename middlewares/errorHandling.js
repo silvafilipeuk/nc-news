@@ -22,6 +22,14 @@ const handlePsqlErrors = (err, req, res, next) => {
 		res.status(400).json({ status: 400, msg: "Bad request." });
 	}
 
+	// CODE 23505 - SQL Violation of unique constraint
+	if (err.code === "23505") {
+		if (err.constraint === "topics_pkey")
+			res.status(409).json({ status: 409, msg: "Topic already exists." });
+
+		res.status(400).json({ status: 400, msg: "Bad request." });
+	}
+
 	// CODE 23503 = SQL Violation of foreign key constraint
 	if (err.code === "23503") {
 		if (err.constraint === "comments_author_fkey")
