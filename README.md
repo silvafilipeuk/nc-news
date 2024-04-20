@@ -49,7 +49,7 @@
 
 **POST /api/topics** - Post a new topic in the database. Returns the posted topic object.
 
-Required body: { slug: "new topic", description: "New topic description" }
+**Required body:** { slug: "new topic", description: "New topic description" }
 
 ```
 "exampleResponse": {
@@ -65,21 +65,21 @@ Required body: { slug: "new topic", description: "New topic description" }
 
 **GET /api/articles** - return an array of articles objects, filtered by the queries if passed any.
 
-Available queries: [topic,sort_by,order,limit,p]
+**Available queries:** [topic,sort_by,order,limit,p]
 
-Topic: filter by the specified topic.
+**topic:** filter by the specified topic.
 
-sort_by: sort by the specified column.
+**sort_by:** sort by the specified column.
 
-order: order asc or desc.
+**order:** order asc or desc.
 
-limit: limit of articles per page.
+**limit:** limit of articles per page.
 
-p: page number from where the system will start selecting articles.
+**p:** page number from where the system will start selecting articles.
 
-Examples of cals with query: /api/articles?topic=cats
+**Examples of cals with query:** /api/articles?topic=cats
 
-Examples of cals with query: /api/articles?topic=coding&sort_by=title&order=asc
+**Examples of cals with query:** /api/articles?topic=coding&sort_by=title&order=asc
 
 ```
 "exampleResponse": {
@@ -99,7 +99,7 @@ Examples of cals with query: /api/articles?topic=coding&sort_by=title&order=asc
 ```
 **POST /api/articles** - Post a new article in the database, returns the posted article object.
 
-Body: {
+**Required Body:** {
 	"author": "rogersop",
 	"title": "The new rogersop Article!",
 	"body": "That should be a very interesting article, but I can't think of what to write in here.",
@@ -144,13 +144,13 @@ Body: {
 ```
 **GET /api/articles/:article_id/comments** - return an array of comments for a given article
 
-Available queries: limit and p.
+**Available queries:** limit and p.
 
-limit - limit the results by the amount specified. I.e: limit=5
+**limit** - limit the results by the amount specified. I.e: limit=5
 
-p - starting p from where the system will start fetching comments. I.e: p=2
+**p** - starting p from where the system will start fetching comments. I.e: p=2
 
-Example of call with queries: /api/articles/1/comments?limit=5&p=2
+**Example of call with queries:** /api/articles/1/comments?limit=5&p=2
 
 ```
 "exampleResponse": {
@@ -168,7 +168,7 @@ Example of call with queries: /api/articles/1/comments?limit=5&p=2
 
 **POST /api/articles/:article_id/comments** - Adds a comment to the given article, returns the added comment.
 
-Body format: { "username": "icellusedkars",	"body": "This is the icellusedkars new omment!" }
+**Required Body:** { "username": "icellusedkars",	"body": "This is the icellusedkars new omment!" }
 
 ```
 "exampleResponse": {
@@ -185,7 +185,7 @@ Body format: { "username": "icellusedkars",	"body": "This is the icellusedkars n
 ```
 **PATCH /api/articles/:article_id** - Update the number of votes for a given article by the number passed on the patch body:
 
-Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
+**Required Body:** { inc_votes: 1} Votes was 100, updated by 1 is now 101.
 
 ```
 "exampleResponse": {
@@ -239,7 +239,7 @@ Body format: { inc_votes: 1} Votes was 100, updated by 1 is now 101.
 
 **PATCH /api/comments/:comment_id** - Update the number of votes for a given comment. Returns the updated comment.
 
-Example of body: { inc_votes: 1 }
+**Required Body:** { inc_votes: 1 }
 
 
 ```
