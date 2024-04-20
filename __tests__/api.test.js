@@ -1239,7 +1239,7 @@ describe("POST /api/topics", () => {
 				expect(newTopic.body.msg).toBe("Topic already exists.");
 			});
 	});
-	test.only("STATUS 400: Should return an appropriate message when trying to add a topic withoug the needed keys on the body.", () => {
+	test.only("STATUS 400: Should return an appropriate message when trying to add a topic without the needed keys on the body.", () => {
 		const newTopic = {
 			description: "Where is our body slug?!",
 		};

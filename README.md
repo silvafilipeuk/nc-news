@@ -46,6 +46,23 @@
     "topics": [{ "slug": "football", "description": "Footie!" }]
   } 
 ```
+
+**POST /api/topics** - Post a new topic in the database. Returns the posted topic object.
+
+Required body: { slug: "new topic", description: "New topic description" }
+
+```
+"exampleResponse": {
+	"topic": [
+		{
+			"slug": "new topic",
+			"description": "New topic description."
+		}
+	]
+}
+```
+
+
 **GET /api/articles** - return an array of articles objects, filtered by the queries if passed any.
 
 Available queries: [topic,sort_by,order,limit,p]
