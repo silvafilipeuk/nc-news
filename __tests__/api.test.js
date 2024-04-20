@@ -1173,7 +1173,7 @@ describe("POST /api/articles", () => {
 });
 
 describe("POST /api/topics", () => {
-	test.only("STATUS 201: Should post a new topic into the database and returns the posted topic object.", () => {
+	test("STATUS 201: Should post a new topic into the database and returns the posted topic object.", () => {
 		const newTopic = {
 			slug: "new topic",
 			description: "This will be our new topic!",
@@ -1191,7 +1191,7 @@ describe("POST /api/topics", () => {
 				);
 			});
 	});
-	test.only("STATUS 201: Should ignore unecessary keys on the body and still post the topic.", () => {
+	test("STATUS 201: Should ignore unecessary keys on the body and still post the topic.", () => {
 		const newTopic = {
 			slug: "new topic",
 			description: "This will be our new topic!",
@@ -1210,7 +1210,7 @@ describe("POST /api/topics", () => {
 				);
 			});
 	});
-	test.only("STATUS 201: Should accept and post a new topic without a description.", () => {
+	test("STATUS 201: Should accept and post a new topic without a description.", () => {
 		const newTopic = {
 			slug: "New topic",
 		};
@@ -1225,7 +1225,7 @@ describe("POST /api/topics", () => {
 				expect(newTopic.body.topic[0].description).toBe(null);
 			});
 	});
-	test.only("STATUS 409: Should return an appropriate message when trying to add a topic that already exists.", () => {
+	test("STATUS 409: Should return an appropriate message when trying to add a topic that already exists.", () => {
 		const newTopic = {
 			slug: "cats",
 			description: "This would be a duplicated topic!",
@@ -1239,7 +1239,7 @@ describe("POST /api/topics", () => {
 				expect(newTopic.body.msg).toBe("Topic already exists.");
 			});
 	});
-	test.only("STATUS 400: Should return an appropriate message when trying to add a topic without the needed keys on the body.", () => {
+	test("STATUS 400: Should return an appropriate message when trying to add a topic without the needed keys on the body.", () => {
 		const newTopic = {
 			description: "Where is our body slug?!",
 		};
@@ -1250,6 +1250,28 @@ describe("POST /api/topics", () => {
 			.expect(400)
 			.then((newTopic) => {
 				expect(newTopic.body.msg).toBe("Bad request.");
+			});
+	});
+});
+
+describe("DELETE /api/articles/:article_id", () => {
+	test("STATUS 200: Delete the given article and all it's comments from the database.", () => {
+		return request(app).delete("/api/articles/1").expect(200);
+	});
+	test("STATUS 404: Should return appropriate message when trying to delete an article that does not exists.", () => {
+		return request(app)
+			.delete("/api/articles/99")
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe("Article not found.");
+			});
+	});
+	test("STATUS 400: Should return appropriate message when trying to delete an article with invalid article_id.", () => {
+		return request(app)
+			.delete("/api/articles/ddd")
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe("Bad request.");
 			});
 	});
 });

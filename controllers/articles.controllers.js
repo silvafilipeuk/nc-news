@@ -4,6 +4,7 @@ const {
 	fetchTotalArticles,
 	updateArticlesById,
 	insertArticle,
+	deleteArticleById,
 } = require("../models/articles.models");
 const { fetchTopics } = require("../models/topics.models");
 
@@ -66,9 +67,22 @@ function postArticle(req, res, next) {
 		});
 }
 
+function removeArticleById(req, res, next) {
+	const { article_id } = req.params;
+
+	deleteArticleById(article_id)
+		.then(() => {
+			res.status(200).send();
+		})
+		.catch((err) => {
+			next(err);
+		});
+}
+
 module.exports = {
 	getArticles,
 	getArticlesById,
 	patchVotesByArticleId,
 	postArticle,
+	removeArticleById,
 };
