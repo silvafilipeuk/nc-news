@@ -40,7 +40,7 @@ function fetchArticles(
 		return Promise.reject({ status: 400, msg: "Invalid sort_by value." });
 	}
 
-	let sqlString = `SELECT a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url, 
+	let sqlString = `SELECT a.*, 
 	count(b.article_id)::int as comment_count FROM articles a
 	LEFT JOIN comments b
 	ON a.article_id = b.article_id `;
