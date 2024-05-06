@@ -85,16 +85,17 @@
 ```
 "exampleResponse": {
     "articles": [
-      {
-        "article_id": 3,
-        "title": "Eight pug gifs that remind me of mitch",
-        "topic": "mitch",
-        "author": "icellusedkars",
-        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        "created_at": "2020-11-03T09:12:00.000Z",
-        "votes": 0,
-        "comment_count": 2
-      }
+    	{
+			"article_id": 34,
+			"title": "The Notorious MSG’s Unlikely Formula For Success",
+			"topic": "cooking",
+			"author": "grumpy19",
+			"body": "The 'umami' craze has turned a much-maligned and misunderstood food additive into an object of obsession for the world’s most innovative chefs. But secret ingredient monosodium glutamate’s biggest secret may be that there was never anything wrong with it at all.",
+			"created_at": "2020-11-22T11:13:00.000Z",
+			"votes": 0,
+			"article_img_url": "https://images.pexels.com/photos/2403392/pexels-photo-2403392.jpeg?w=700&h=700",
+			"comment_count": 11
+		}		
     ]
   }
 ```
