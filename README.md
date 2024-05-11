@@ -6,6 +6,7 @@
 - The database was implemented with PostgreSQL, and the entire project was modeled following the MVC design pattern.
 
 **A live hosted version of this project can be found at:** - https://nc-news-vvzg.onrender.com/api 
+
 **You can find the front end part of that project here:** - https://github.com/silvafilipeuk/nc-news-frontend
 
 ## Setup instructions:
